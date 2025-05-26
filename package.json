@@ -1,0 +1,35 @@
+{
+  "name": "@toikit/mongoose",
+  "version": "1.0.0",
+  "description": "Toikit Mongoose use for Toikit Framework",
+  "main": "dist/index.js",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "test": "npm run test",
+    "build": "rm -rf ./dist && npx tsc && npx tsc-alias"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/toikit/toikit-mongoose.git"
+  },
+  "keywords": [
+    "toikit",
+    "server",
+    "nodejs",
+    "mongoose"
+  ],
+  "author": "Toikit",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/toikit/toikit-mongoose/issues"
+  },
+  "homepage": "https://github.com/toikit/toikit-mongoose#readme",
+  "dependencies": {
+    "@toikit/toikit": "^1.1.1",
+    "@types/express": "^5.0.2",
+    "mongoose": "^8.15.0",
+    "typescript": "^5.8.3"
+  }
+}
