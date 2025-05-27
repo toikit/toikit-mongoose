@@ -6,19 +6,19 @@ const paginate = async ({ model, filter, select, options, page, pageSize }) => {
     page = page < 1 ? 1 : page;
     pageSize = parseInt(pageSize);
     pageSize = pageSize < 2 ? 1 : pageSize;
+    let items = options || [];
+    if (select)
+        items.push({ $project: select });
+    items.push({ $skip: (page - 1) * pageSize });
+    items.push({ $limit: pageSize });
     const result = await model.aggregate([
-        { $match: filter },
+        ...filter,
         {
             $facet: {
                 totalItems: [
                     { $count: "total" }
                 ],
-                items: [
-                    ...options,
-                    { $project: select },
-                    { $skip: (page - 1) * pageSize },
-                    { $limit: pageSize }
-                ]
+                items
             }
         }
     ]);

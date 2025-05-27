@@ -1,6 +1,6 @@
 {
   "name": "@toikit/mongoose",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Toikit Mongoose use for Toikit Framework",
   "main": "dist/index.js",
   "files": [
