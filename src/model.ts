@@ -48,8 +48,9 @@ export function declareModel(names: any) {
   else binding(names);
 }
 
-export function modelData(models: any) {
-  function binding(data) {
+export function modelData(models: any, custom: any = {}) {
+  function binding(d) {
+    let data = {...d, ...custom}
     let name = data.name;
     let conn = data?.connection || 'default';
     setData('model_attributes_' + name, data.attributes);

@@ -47,8 +47,9 @@ function declareModel(names) {
     else
         binding(names);
 }
-function modelData(models) {
-    function binding(data) {
+function modelData(models, custom = {}) {
+    function binding(d) {
+        let data = { ...d, ...custom };
         let name = data.name;
         let conn = data?.connection || 'default';
         (0, toikit_1.setData)('model_attributes_' + name, data.attributes);
