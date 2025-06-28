@@ -20,8 +20,8 @@ function declareModel(names) {
             name = name.name;
         if ((0, toikit_1.getDeclaration)('model_' + name))
             return;
-        let attributes = (0, toikit_1.getData)('model_attributes_' + name);
-        let options = (0, toikit_1.getData)('model_options_' + name);
+        let attributes = (0, toikit_1.getData)('model_attributes_' + name) || {};
+        let options = (0, toikit_1.getData)('model_options_' + name) || {};
         let mounted = (0, toikit_1.getData)('model_mounted_' + name);
         let conn = (0, toikit_1.getData)('model_connection_' + name);
         const Schema = new mongoose_1.default.Schema(attributes, options);

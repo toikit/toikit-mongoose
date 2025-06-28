@@ -14,8 +14,8 @@ export function declareModel(names: any) {
     if (typeof name == 'object') name = name.name;
     if (getDeclaration('model_' + name)) return;
 
-    let attributes = getData('model_attributes_' + name);
-    let options = getData('model_options_' + name);
+    let attributes = getData('model_attributes_' + name) || {};
+    let options = getData('model_options_' + name) || {};
     let mounted = getData('model_mounted_' + name);
     let conn = getData('model_connection_' + name);
 
