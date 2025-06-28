@@ -10,20 +10,20 @@ exports.withSoftDelete = withSoftDelete;
 const mongoose_1 = __importDefault(require("mongoose"));
 const toikit_1 = require("@toikit/toikit");
 let connections = {};
-function model(name) {
-    return (0, toikit_1.resolve)('model_' + name);
+function model(name, conn = 'default') {
+    let accessName = '__db_' + conn + '_model_' + name;
+    return (0, toikit_1.resolve)('model_' + accessName);
 }
 ;
 function declareModel(names) {
-    function binding(name) {
-        if (typeof name == 'object')
-            name = name.name;
-        if ((0, toikit_1.getDeclaration)('model_' + name))
+    function binding(data) {
+        let conn = data?.connection || 'default';
+        let accessName = '__db_' + conn + '_model_' + data.name;
+        if ((0, toikit_1.getDeclaration)('model_' + accessName))
             return;
-        let attributes = (0, toikit_1.getData)('model_attributes_' + name) || {};
-        let options = (0, toikit_1.getData)('model_options_' + name) || {};
-        let mounted = (0, toikit_1.getData)('model_mounted_' + name);
-        let conn = (0, toikit_1.getData)('model_connection_' + name);
+        let attributes = (0, toikit_1.getData)('model_attributes_' + accessName) || {};
+        let options = (0, toikit_1.getData)('model_options_' + accessName) || {};
+        let mounted = (0, toikit_1.getData)('model_mounted_' + accessName);
         const Schema = new mongoose_1.default.Schema(attributes, options);
         if (options.softDelete)
             withSoftDelete(Schema);
@@ -36,8 +36,8 @@ function declareModel(names) {
         if (!connections[conn]) {
             connections[conn] = mongoose_1.default.createConnection(databaseConfig[conn].uri, databaseConfig[conn]?.options);
         }
-        const Model = connections[conn].model(name, Schema);
-        (0, toikit_1.declare)('value', Model, 'model_' + name);
+        const Model = connections[conn].model(data.name, Schema);
+        (0, toikit_1.declare)('value', Model, 'model_' + accessName);
     }
     if (Array.isArray(names)) {
         names.forEach(name => {
@@ -52,10 +52,10 @@ function modelData(models, custom = {}) {
         let data = { ...d, ...custom };
         let name = data.name;
         let conn = data?.connection || 'default';
-        (0, toikit_1.setData)('model_attributes_' + name, data.attributes);
-        (0, toikit_1.setData)('model_connection_' + name, conn);
-        (0, toikit_1.setData)('model_options_' + name, data.options || {});
-        (0, toikit_1.setData)('model_mounted_' + name, data.mounted ? [data.mounted] : []);
+        let accessName = '__db_' + conn + '_model_' + name;
+        (0, toikit_1.setData)('model_attributes_' + accessName, data.attributes);
+        (0, toikit_1.setData)('model_options_' + accessName, data.options || {});
+        (0, toikit_1.setData)('model_mounted_' + accessName, data.mounted ? [data.mounted] : []);
     }
     if (Array.isArray(models)) {
         models.forEach(model => {

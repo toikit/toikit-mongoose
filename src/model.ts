@@ -5,19 +5,20 @@ import { setData, getData, resolve, declare, getDeclaration, getConfig } from "@
 let connections: any = {};
 
 // Model
-export function model(name) {
-  return resolve('model_' + name);
+export function model(name: String, conn:any = 'default') {
+  let accessName = '__db_' +conn + '_model_' + name;
+  return resolve('model_' + accessName);
 };
 
 export function declareModel(names: any) {
-  function binding(name) {
-    if (typeof name == 'object') name = name.name;
-    if (getDeclaration('model_' + name)) return;
+  function binding(data) {
+    let conn = data?.connection || 'default';
+    let accessName = '__db_' + conn + '_model_' + data.name;
+    if (getDeclaration('model_' + accessName)) return;
 
-    let attributes = getData('model_attributes_' + name) || {};
-    let options = getData('model_options_' + name) || {};
-    let mounted = getData('model_mounted_' + name);
-    let conn = getData('model_connection_' + name);
+    let attributes = getData('model_attributes_' + accessName) || {};
+    let options = getData('model_options_' + accessName) || {};
+    let mounted = getData('model_mounted_' + accessName);
 
     const Schema = new mongoose.Schema(attributes, options);
 
@@ -36,8 +37,8 @@ export function declareModel(names: any) {
       connections[conn] = mongoose.createConnection(databaseConfig[conn].uri, databaseConfig[conn]?.options);
     }
 
-    const Model = connections[conn].model(name, Schema);
-    declare('value', Model, 'model_' + name);
+    const Model = connections[conn].model(data.name, Schema);
+    declare('value', Model, 'model_' + accessName);
   }
 
   if (Array.isArray(names)) {
@@ -53,10 +54,10 @@ export function modelData(models: any, custom: any = {}) {
     let data = {...d, ...custom}
     let name = data.name;
     let conn = data?.connection || 'default';
-    setData('model_attributes_' + name, data.attributes);
-    setData('model_connection_' + name, conn);
-    setData('model_options_' + name, data.options || {});
-    setData('model_mounted_' + name, data.mounted ? [data.mounted] : []);
+    let accessName = '__db_' +conn + '_model_' + name;
+    setData('model_attributes_' + accessName, data.attributes);
+    setData('model_options_' + accessName, data.options || {});
+    setData('model_mounted_' + accessName, data.mounted ? [data.mounted] : []);
   }
 
   if (Array.isArray(models)) {
