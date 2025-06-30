@@ -1,4 +1,7 @@
+import { model as createModel } from "./model";
+
 export const paginate = async ({model, filter, select, options, page, pageSize}: any) => {
+  if (typeof model == 'string') model = createModel(model);
   page = parseInt(page);
   page = page < 1 ? 1 : page;
   pageSize = parseInt(pageSize);

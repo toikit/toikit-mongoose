@@ -1,7 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.paginate = void 0;
+const model_1 = require("./model");
 const paginate = async ({ model, filter, select, options, page, pageSize }) => {
+    if (typeof model == 'string')
+        model = (0, model_1.model)(model);
     page = parseInt(page);
     page = page < 1 ? 1 : page;
     pageSize = parseInt(pageSize);
